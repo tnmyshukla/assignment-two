@@ -1,11 +1,12 @@
+import StorageHandler.DiskStorageHandler;
+import StorageHandler.StorageHandler;
 import exceptions.InvalidInputException;
 import models.UserDetails;
 import models.UserDetailsComparator;
-import StorageHandler.DiskStorageHandler;
-import StorageHandler.StorageHandler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserManager {
@@ -72,13 +73,20 @@ public class UserManager {
     }
 
     private void validateBlankData(final String name, final String age, final String address,final  String rollNo, final String courseString) {
-        if(name==null||age==null||address==null||rollNo==null||courseString==null){
+        List<String> ls=new ArrayList<>();
+        ls.add(name);
+        ls.add(age);
+        ls.add(address);
+        ls.add(rollNo);
+        ls.add(courseString);
+
+        if(utils.checkNull(ls)){
             throw new InvalidInputException("Fields can't be null.");
         }
-        if(name.isEmpty()||age.isEmpty()||address.isEmpty()||rollNo.isEmpty()||courseString.isEmpty()){
+        if(utils.checkEmpty(ls)){
             throw new InvalidInputException("Fields can't be empty.");
         }
-        if(name.isBlank()||age.isBlank()||address.isBlank()||rollNo.isBlank()||courseString.isBlank()){
+        if(utils.checkBlank(ls)){
             throw new InvalidInputException("Fields can't be blank.");
         }
     }
@@ -137,22 +145,43 @@ public class UserManager {
         while(true){
             switch (choice){
                 case 1:
-                    addUserDetails();
+                    try{
+                        addUserDetails();
+                    }catch (InvalidInputException e){
+                        System.out.println(e.getMessage());
+                        startManager();
+                    }
                     break;
                 case 2:
-                    displayUserDetails();
+                    try{
+                        displayUserDetails();
+                    }catch (InvalidInputException e){
+                        System.out.println(e.getMessage());
+                        startManager();
+                    }
                     break;
                 case 3:
-                    deleteUserDetails();
+                    try{
+                        deleteUserDetails();
+                    }catch (InvalidInputException e){
+                        System.out.println(e.getMessage());
+                        startManager();
+                    }
                     break;
                 case 4:
-                    saveUserDetails();
+                    try{
+                        saveUserDetails();
+                    }catch (InvalidInputException e){
+                        System.out.println(e.getMessage());
+                        startManager();
+                    }
                     break;
                 case 5:
                     System.exit(0);
                     break;
                 default:
-                    throw new InvalidInputException("Invalid Option");
+//                    throw new InvalidInputException("Invalid Option");
+                    startManager();
             }
             displayMenu();
             choice= scan.nextInt();
